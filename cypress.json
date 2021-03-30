@@ -1,3 +1,5 @@
 {
-  "ignoreTestFiles": "*.js"
+  "ignoreTestFiles": "*.js",
+  "video": false,
+  "screenshots": false
 }

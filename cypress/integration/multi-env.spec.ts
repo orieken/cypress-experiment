@@ -69,6 +69,12 @@ describe('Examples', () => {
     });
   });
 
+  it('title then cy.then function', () => {
+    cy.title().then((actualTitle: string) => {
+      cy.then(() => getTitleForEnv(Cypress.env('name'))).should('equal', actualTitle);
+    });
+  });
+
   it('title then inside function', () => {
     cy.title().then((actualTitle: string) => {
       insideGetTitleForEnv(Cypress.env('name')).should('equal', actualTitle);
