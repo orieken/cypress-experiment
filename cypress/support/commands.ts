@@ -26,6 +26,8 @@
 
 /// <reference types="cypress" />
 
+import { SiteTitles } from '../lib/site-titles';
+
 declare global {
   namespace Cypress {
     interface Chainable {
@@ -36,11 +38,7 @@ declare global {
 
 
 Cypress.Commands.add('getTitle', (name: string) => {
-  const titles: { [k: string]: string } = {
-    local: 'Bookstore',
-    dit: 'Kitchen Sink',
-  };
-  return cy.wrap(titles[name]);
+  return cy.wrap(SiteTitles[name]);
 });
 
 export default Cypress.Commands;

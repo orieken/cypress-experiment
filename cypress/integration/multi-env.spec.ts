@@ -1,28 +1,45 @@
 import Chainable = Cypress.Chainable;
+import { SiteTitles } from '../lib/site-titles';
 
 const getTitleForEnv = (name: string): string => {
-  const titles: { [k: string]: string } = {
-    local: 'Bookstore',
-    deployed: 'Kitchen Sink',
-  };
-  return titles[name];
+  return SiteTitles[name];
 };
 
 const cyWrappedGetTitleForEnv = (name: string): Chainable<string> => {
-  const titles: { [k: string]: string } = {
-    local: 'Bookstore',
-    deployed: 'Kitchen Sink',
-  };
-  return cy.wrap(titles[name]);
+  return cy.wrap(SiteTitles[name]);
 };
 
 
 describe('Examples', () => {
+  const insideGetTitleForEnv = (name: string): string => {
+    return SiteTitles[name];
+  };
+
+  const insideCyWrappedGetTitleForEnv = (name: string): Chainable<string> => {
+    return cy.wrap(SiteTitles[name]);
+  };
   beforeEach(() => {
     cyWrappedGetTitleForEnv(Cypress.env('name')).as('foo');
   });
-  it('hard code\'d', () => {
-    cy.title().should('eq', 'Bookstore');
+  it('hard code\'d object lookup', () => {
+    cy.title().should('eq', SiteTitles[Cypress.env('name')]);
+  });
+
+  it('hard code\'d cy.wrap object lookup', () => {
+    cy.wrap({ titles: (name: string) => SiteTitles[name]})
+        .invoke('titles', Cypress.env('name'))
+        .then((expectedTitle) => {
+          cy.title().should('eq', expectedTitle);
+        });
+  });
+
+  it('hard code\'d cy.wrap object lookup function model name', () => {
+    const getTitle = (name: string) => SiteTitles[name];
+    cy.wrap({ titles: getTitle})
+        .invoke('titles', Cypress.env('name'))
+        .then((expectedTitle) => {
+          cy.title().should('eq', expectedTitle);
+        });
   });
 
   it('calling a function inside spec', () => {
@@ -49,6 +66,18 @@ describe('Examples', () => {
   it('title then function', () => {
     cy.title().then((actualTitle: string) => {
       getTitleForEnv(Cypress.env('name')).should('equal', actualTitle);
+    });
+  });
+
+  it('title then inside function', () => {
+    cy.title().then((actualTitle: string) => {
+      insideGetTitleForEnv(Cypress.env('name')).should('equal', actualTitle);
+    });
+  });
+
+  it('title then inside cy.wrap function', () => {
+    cy.title().then((actualTitle: string) => {
+      insideCyWrappedGetTitleForEnv(Cypress.env('name')).should('equal', actualTitle);
     });
   });
 
