@@ -4,5 +4,6 @@ orbs:
 workflows:
   build:
     jobs:
+      - cypress/install
       - cypress/run:
           command: npx cypress run --env configFile=deployed
