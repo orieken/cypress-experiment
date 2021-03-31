@@ -14,4 +14,4 @@ const plugins = (on: Cypress.PluginEvents, config: Partial<Cypress.ConfigOptions
   return getConfigurationByFile(file)
 };
 
-export default plugins;
+export = plugins;
