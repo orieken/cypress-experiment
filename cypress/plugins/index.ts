@@ -8,8 +8,10 @@ const getConfigurationByFile =  (file: ENV_URL) => {
   return readJson(pathToConfigFile)
 }
 
-export default (on: Cypress.PluginEvents, config: Partial<Cypress.ConfigOptions>) => {
+const plugins = (on: Cypress.PluginEvents, config: Partial<Cypress.ConfigOptions>) => {
   const file: ENV_URL = config.env?.configFile || 'local';
 
   return getConfigurationByFile(file)
 };
+
+export default plugins;
